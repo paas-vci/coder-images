@@ -1,13 +1,13 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-USER root
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND noninteractive
 ARG HOME=/home/vf-user
+
 # Install the Docker apt repository
 RUN apt-get update && \
     apt-get upgrade --yes && \
-    apt-get install --yes ca-certificates  
+    apt-get install --yes ca-certificates
 
 # Install baseline packages
 RUN apt-get update && \
@@ -31,8 +31,7 @@ RUN apt-get update && \
     rsync && \
     # Install latest Git using their official PPA
     add-apt-repository ppa:git-core/ppa && \
-    apt-get install --yes git 
-
+    apt-get install --yes git \
 
 # Make typing unicode characters in the terminal work.
 ENV LANG en_US.UTF-8
@@ -44,6 +43,8 @@ RUN useradd vf-user \
     --uid=1001 \
     --user-group && \
     echo "vf-user ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd
+
+RUN pip install numpy
 RUN chown -R vf-user $HOME
 RUN echo -e -n "newpasswd\nnewpasswd" | passwd vf-user
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
